@@ -17,12 +17,13 @@ router.get("/", async function (req: express.Request, res: express.Response) {
 		response.succcess(req, res, messages, 201);
 	} catch (e) {
 		response.error(req, res, "Error while getting messages", 500, e);
+		res.status(200).send();
 	}
 });
 
 router.post("/", upload.single("file"), async function (req: express.Request, res: express.Response) {
 	try {
-		const message = await messageController.createMessage(req.body.chat, req.body.user, req.body.message, req.file);
+		const message = await messageController.addMessage(req.body.chat, req.body.user, req.body.message, req.file);
 		response.succcess(req, res, message, 200);
 	} catch (e) {
 		console.log(e);

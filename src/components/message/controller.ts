@@ -1,3 +1,4 @@
+import { getSocket } from "../../socket";
 import { IDocumentMessage, IMessage } from "./model";
 import * as store from "./store";
 
@@ -13,7 +14,7 @@ export function getMessages(filterChat?: any) {
 	});
 }
 
-export function createMessage(chat: String, user: String, message: String, file?: any) {
+export function addMessage(chat: String, user: String, message: String, file?: any) {
 	return new Promise(async (resolve, reject) => {
 		if (!chat || !user || !message) {
 			console.log("[MessageController] Values for chat, user, and/or message not found.");
@@ -32,6 +33,7 @@ export function createMessage(chat: String, user: String, message: String, file?
 		};
 		store.addMessage(fullMessage)
 			.then((data) => {
+				getSocket().emit("message", fullMessage);
 				resolve(data);
 			})
 			.catch((e) => {
